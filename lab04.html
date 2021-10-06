@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Лабораторная работа №4 по теме: "Фильтр Собеля"</title>
+</head>
+<body>
+<table style="border: 10px groove #e3e3e3;
+border-color: red green blue yellow;
+border-style: ridge">
+  <tr>
+    <td>Лабораторная работа №4 по теме: "Фильтр Собеля"</td>
+  </tr>
+</table>
+<canvas id='canvas' width='500px' height='500px' style="border: 10px groove #e3e3e3"></canvas>
+<canvas id='sobel' width="500px" height="500px" style="border: 10px groove #e3e3e3"></canvas>
+
+<script>
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+
+  var w = 350;
+  var h = 350;
+
+  ctx.fillStyle = 'magenta'
+  ctx.fillRect(165, 165, 165, 165);
+
+  var imgData = ctx.getImageData(0, 0, w, h);
+  console.log(imgData.data[(h * 165 + 165) * 4],
+          imgData.data[(h * 165 + 165) * 4 + 1]);
+   var canvas_Sobel = document.getElementById("sobel");
+  var ctx_Sobel = canvas_Sobel.getContext('2d');
+  var imgData_Sobel = imgData;
+
+
+  for (var i = 1; i < h - 1; i++) {
+    for (var j = 1; j < w - 1; j++) {
+
+      pixelY = -imgData.data[(j - 1) * 4 + (i - 1) * 4 * w]
+              - imgData.data[(j - 1) * 4 + i * 4 * w]
+              - imgData.data[(j - 1) * 4 + (i + 1) * 4 * w]
+              + imgData.data[(j + 1) * 4 + (i - 1) * 4 * w]
+              + imgData.data[(j + 1) * 4 + i * 4 * w]
+              + imgData.data[(j + 1) * 4 + (i + 1) * 4 * w];
+
+      pixelX = imgData.data[(i - 1) * 4 + (j - 1) * 4 * h]
+              + imgData.data[(i - 1) * 4 + j * 4 * h]
+              + imgData.data[(i - 1) * 4 + (j + 1) * 4 * h]
+              - imgData.data[(i + 1) * 4 + (j - 1) * 4 * h]
+              - imgData.data[(i + 1) * 4 + j * 4 * h]
+              - imgData.data[(i + 1) * 4 + (j + 1) * 4 * h];
+
+      imgData_Sobel.data[j * 4 + i * w * 4 + 3] =
+              Math.sqrt(pixelY * pixelY + pixelX * pixelX);
+    }
+  }
+
+  for (var i = 0; i < 165; i++) {
+    imgData_Sobel.data[i * 4 + i * 200] = 255;
+  }
+  ctx_Sobel.putImageData(imgData_Sobel, 0, 0);
+</script>
+</body>
+</html>
