@@ -35,20 +35,26 @@ border-style: ridge">
 
   for (var i = 1; i < h - 1; i++) {
     for (var j = 1; j < w - 1; j++) {
-
-      pixelY = -imgData.data[(j - 1) * 4 + (i - 1) * 4 * w]
-              - imgData.data[(j - 1) * 4 + i * 4 * w]
-              - imgData.data[(j - 1) * 4 + (i + 1) * 4 * w]
-              + imgData.data[(j + 1) * 4 + (i - 1) * 4 * w]
-              + imgData.data[(j + 1) * 4 + i * 4 * w]
-              + imgData.data[(j + 1) * 4 + (i + 1) * 4 * w];
-
-      pixelX = imgData.data[(i - 1) * 4 + (j - 1) * 4 * h]
-              + imgData.data[(i - 1) * 4 + j * 4 * h]
-              + imgData.data[(i - 1) * 4 + (j + 1) * 4 * h]
-              - imgData.data[(i + 1) * 4 + (j - 1) * 4 * h]
-              - imgData.data[(i + 1) * 4 + j * 4 * h]
-              - imgData.data[(i + 1) * 4 + (j + 1) * 4 * h];
+// _____________________________________________________
+// |Матрица для x (pixelX):     Матрица для y (pixelY):|
+// | -1 0 1                      -1 -2 -1              |
+// | -2 0 2                       0  0  0              |
+// | -1 0 1                       1  2  1              |
+// |---------------------------------------------------|
+      pixelX = -1*imgData.data[(j - 1) * 4 + (i - 1) * 4 * w]
+              -2*imgData.data[(j - 1) * 4 + i * 4 * w]
+              -1*imgData.data[(j - 1) * 4 + (i + 1) * 4 * w]
+              +1*imgData.data[(j + 1) * 4 + (i - 1) * 4 * w]
+              +2*imgData.data[(j + 1) * 4 + i * 4 * w]
+              +1*imgData.data[(j + 1) * 4 + (i + 1) * 4 * w];
+      
+// транспонируем матрицу для x, выполняя замену i->j и j->i
+      pixelY = -1*imgData.data[(i - 1) * 4 + (j - 1) * 4 * h]
+              -2*imgData.data[(i - 1) * 4 + j * 4 * h]
+              -1*imgData.data[(i - 1) * 4 + (j + 1) * 4 * h]
+              +1*imgData.data[(i + 1) * 4 + (j - 1) * 4 * h]
+              +2*imgData.data[(i + 1) * 4 + j * 4 * h]
+              +1*imgData.data[(i + 1) * 4 + (j + 1) * 4 * h];
 
       imgData_Sobel.data[j * 4 + i * w * 4 + 3] =
               Math.sqrt(pixelY * pixelY + pixelX * pixelX);
